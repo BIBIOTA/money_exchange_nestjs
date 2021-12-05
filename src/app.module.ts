@@ -1,18 +1,29 @@
+import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+// import { TypeOrmModule } from '@nestjs/typeorm';
+import { GraphQLModule } from '@nestjs/graphql';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ExchangesModule } from './exchanges/exchanges.module';
+import { MongooseModule } from '@nestjs/mongoose';
+import { PersonModule } from './person/person.module';
+import { HobbyModule } from './hobby/hobby.module';
+import { join } from 'path';
+import { CurrenciesModule } from './currencies/currencies.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mongodb',
-      url: 'mongodb://root:root@localhost:27017/?retryWrites=true&w=majority',
-      entities: [],
-      synchronize: true,
+    ConfigModule.forRoot(),
+    // TypeOrmModule.forRoot(),
+    GraphQLModule.forRoot({
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      sortSchema: true,
+      playground: true,
+      debug: false,
     }),
-    ExchangesModule,
+    MongooseModule.forRoot(process.env.mongoURI),
+    PersonModule,
+    HobbyModule,
+    CurrenciesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
