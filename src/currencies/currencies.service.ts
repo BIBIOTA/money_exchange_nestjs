@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Schema as MongooseSchema } from 'mongoose';
+import { Model } from 'mongoose';
 
 import { Currency, CurrencyDocument } from './currencies.model';
 import {
@@ -8,7 +8,6 @@ import {
   ListCurrencyInput,
   UpdateCurrencyInput,
 } from './dto/currencies.inputs';
-
 @Injectable()
 export class CurrenciesService {
   constructor(
@@ -20,8 +19,8 @@ export class CurrenciesService {
     return createdHobby.save();
   }
 
-  getById(_id: MongooseSchema.Types.ObjectId) {
-    return this.currencyModel.findById(_id).exec();
+  getByUuId(currency_uuid: string) {
+    return this.currencyModel.findOne({ currency_uuid }).exec();
   }
 
   list(filters: ListCurrencyInput) {
@@ -29,12 +28,13 @@ export class CurrenciesService {
   }
 
   update(payload: UpdateCurrencyInput) {
+    const { currency_uuid } = payload;
     return this.currencyModel
-      .findByIdAndUpdate(payload._id, payload, { new: true })
+      .findOneAndUpdate({ currency_uuid }, payload, { new: true })
       .exec();
   }
 
-  delete(_id: MongooseSchema.Types.ObjectId) {
-    return this.currencyModel.findByIdAndDelete(_id).exec();
+  delete(currency_uuid: string) {
+    return this.currencyModel.findOneAndDelete({ currency_uuid }).exec();
   }
 }

@@ -1,5 +1,4 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { Schema as MongooseSchema } from 'mongoose';
+import { Args, Mutation, Query, Resolver, ID } from '@nestjs/graphql';
 
 import { Currency } from './currencies.model';
 import { CurrenciesService } from './currencies.service';
@@ -15,9 +14,9 @@ export class CurrenciesResolver {
 
   @Query(() => Currency)
   async currency(
-    @Args('_id', { type: () => String }) _id: MongooseSchema.Types.ObjectId,
+    @Args('currency_uuid', { type: () => ID }) currency_uuid: string,
   ) {
-    return this.currenciesService.getById(_id);
+    return this.currenciesService.getByUuId(currency_uuid);
   }
 
   @Query(() => [Currency])
@@ -39,8 +38,9 @@ export class CurrenciesResolver {
 
   @Mutation(() => Currency)
   async deleteCurrency(
-    @Args('_id', { type: () => String }) _id: MongooseSchema.Types.ObjectId,
+    @Args('currency_uuid', { type: () => ID })
+    currency_uuid: string,
   ) {
-    return this.currenciesService.delete(_id);
+    return this.currenciesService.delete(currency_uuid);
   }
 }
