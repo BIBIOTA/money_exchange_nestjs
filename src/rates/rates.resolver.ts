@@ -17,6 +17,7 @@ import {
   ListRateInput,
   UpdateRateInput,
 } from './dto/rates.inputs';
+import { Currency } from 'src/currencies/currencies.model';
 
 @Resolver(() => Rate)
 export class RatesResolver {
@@ -50,14 +51,9 @@ export class RatesResolver {
     return this.ratesService.delete(rate_uuid);
   }
 
-  //TODO 關聯currency
-  // @ResolveField()
-  // async rates(
-  //   @Parent() currency: CurrencyDocument,
-  //   @Args('populate') populate: boolean,
-  // ) {
-  //   if (populate) await currency.populate({ path: 'rates', model: Rate.name });
-
-  //   return currency.rates;
-  // }
+  @ResolveField()
+  async currency(@Parent() rate: RateDocument) {
+    await rate.populate({ path: 'currency', model: Currency.name });
+    return rate.currency;
+  }
 }

@@ -2,6 +2,8 @@ import { Document, Schema as MongooseSchema } from 'mongoose';
 import { Field, ObjectType, ID } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { v4 as uuid } from 'uuid';
+
+import { Currency } from '../currencies/currencies.model';
 @ObjectType()
 @Schema()
 export class Rate {
@@ -19,9 +21,9 @@ export class Rate {
   @Prop()
   rate: number;
 
-  @Field(() => ID)
-  @Prop()
-  currency_uuid: string;
+  @Field(() => Currency)
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: Currency.name })
+  currency: MongooseSchema.Types.ObjectId;
 }
 
 export type RateDocument = Rate & Document;

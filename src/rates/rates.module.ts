@@ -5,12 +5,15 @@ import { Rate, RateSchema } from './rates.model';
 import { RatesService } from './rates.service';
 import { RatesResolver } from './rates.resolver';
 
+import { Currency, CurrencySchema } from '../currencies/currencies.model';
+
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Rate.name, schema: RateSchema }]),
-    RatesModule,
+    MongooseModule.forFeature([
+      { name: Rate.name, schema: RateSchema },
+      { name: Currency.name, schema: CurrencySchema },
+    ]),
   ],
   providers: [RatesService, RatesResolver],
-  exports: [RatesService],
 })
 export class RatesModule {}

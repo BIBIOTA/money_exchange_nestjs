@@ -3,30 +3,32 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { Rate, RateDocument } from './rates.model';
+
 import {
   CreateRateInput,
   ListRateInput,
   UpdateRateInput,
 } from './dto/rates.inputs';
 
+import { Currency, CurrencyDocument } from '../currencies/currencies.model';
+
 @Injectable()
 export class RatesService {
-  constructor(@InjectModel(Rate.name) private rateModel: Model<RateDocument>) {}
+  constructor(
+    @InjectModel(Rate.name) private rateModel: Model<RateDocument>,
+    @InjectModel(Currency.name) private currencyModel: Model<CurrencyDocument>,
+  ) {}
 
-  create(payload: CreateRateInput) {
-    const createdRate = new this.rateModel(payload);
-    return createdRate.save();
+  async getCurrencyIdAndProcessData(payload) {
+    const { currency_uuid, ...othersPayload } = payload;
+    const { _id } = await this.currencyModel.findOne({ currency_uuid });
+    return { currency: _id, ...othersPayload };
   }
 
-  async creates(rates: [CreateRateInput]) {
-    const rateIds = [];
-    if (rates.length > 0) {
-      for (const rate of rates) {
-        const { _id } = await this.create(rate);
-        rateIds.push(_id);
-      }
-    }
-    return rateIds;
+  async create(payload: CreateRateInput) {
+    const data = await this.getCurrencyIdAndProcessData(payload);
+    const createdRate = new this.rateModel(data);
+    return createdRate.save();
   }
 
   getByUuId(rate_uuid: string) {
@@ -37,33 +39,11 @@ export class RatesService {
     return this.rateModel.find({ ...filters }).exec();
   }
 
-  update(payload: UpdateRateInput) {
-    const { rate_uuid } = payload;
+  async update(payload: UpdateRateInput) {
+    const { rate_uuid, data } = await this.getCurrencyIdAndProcessData(payload);
     return this.rateModel
-      .findOneAndUpdate({ rate_uuid }, payload, { new: true })
+      .findOneAndUpdate({ rate_uuid }, data, { new: true })
       .exec();
-  }
-
-  async updates(rates: [UpdateRateInput]) {
-    const rateIds = [];
-    if (rates.length > 0) {
-      for (const rate of rates) {
-        const { _id } = await this.update(rate);
-        rateIds.push(_id);
-      }
-    }
-    return rateIds;
-  }
-
-  deletes(currency_uuid: string): boolean {
-    this.rateModel.deleteMany({ currency_uuid }, function (err) {
-      console.log(err);
-      if (err) {
-        console.log(err);
-        return false;
-      }
-    });
-    return true;
   }
 
   delete(rate_uuid: string) {

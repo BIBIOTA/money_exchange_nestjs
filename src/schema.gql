@@ -87,7 +87,7 @@ type Query {
 }
 
 type Rate {
-  currency_uuid: ID!
+  currency: Currency!
   name: String!
   rate: Float!
   rate_uuid: ID!

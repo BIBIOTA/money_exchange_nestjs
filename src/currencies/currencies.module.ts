@@ -4,13 +4,14 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Currency, CurrencySchema } from './currencies.model';
 import { CurrenciesService } from './currencies.service';
 import { CurrenciesResolver } from './currencies.resolver';
-import { RatesModule } from '../rates/rates.module';
+
+import { Rate, RateSchema } from '../rates/rates.model';
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Currency.name, schema: CurrencySchema },
+      { name: Rate.name, schema: RateSchema },
     ]),
-    RatesModule,
   ],
   providers: [CurrenciesService, CurrenciesResolver],
 })
