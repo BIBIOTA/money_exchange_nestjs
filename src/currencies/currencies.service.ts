@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { Currency, CurrencyDocument } from './currencies.model';
+import { RatesService } from '../rates/rates.service';
 import {
   CreateCurrencyInput,
   ListCurrencyInput,
@@ -12,11 +13,12 @@ import {
 export class CurrenciesService {
   constructor(
     @InjectModel(Currency.name) private currencyModel: Model<CurrencyDocument>,
+    private readonly ratesService: RatesService,
   ) {}
 
   create(payload: CreateCurrencyInput) {
-    const createdHobby = new this.currencyModel(payload);
-    return createdHobby.save();
+    const createdCurrency = new this.currencyModel(payload);
+    return createdCurrency.save();
   }
 
   getByUuId(currency_uuid: string) {
@@ -30,11 +32,17 @@ export class CurrenciesService {
   update(payload: UpdateCurrencyInput) {
     const { currency_uuid } = payload;
     return this.currencyModel
-      .findOneAndUpdate({ currency_uuid }, payload, { new: true })
+      .findOneAndUpdate({ currency_uuid }, { ...payload }, { new: true })
       .exec();
   }
 
-  delete(currency_uuid: string) {
+  async delete(currency_uuid: string) {
+    await this.deleteRelationRates(currency_uuid);
     return this.currencyModel.findOneAndDelete({ currency_uuid }).exec();
+  }
+
+  async deleteRelationRates(currency_uuid: string) {
+    await this.ratesService.deletes(currency_uuid);
+    await this.currencyModel.findOne({ currency_uuid }).exec();
   }
 }

@@ -9,6 +9,7 @@ import { PersonModule } from './person/person.module';
 import { HobbyModule } from './hobby/hobby.module';
 import { join } from 'path';
 import { CurrenciesModule } from './currencies/currencies.module';
+import { RatesModule } from './rates/rates.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { CurrenciesModule } from './currencies/currencies.module';
     PersonModule,
     HobbyModule,
     CurrenciesModule,
+    RatesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

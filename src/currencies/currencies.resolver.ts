@@ -1,13 +1,21 @@
-import { Args, Mutation, Query, Resolver, ID } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Query,
+  Parent,
+  Resolver,
+  ResolveField,
+  ID,
+} from '@nestjs/graphql';
 
 import { Currency } from './currencies.model';
 import { CurrenciesService } from './currencies.service';
+
 import {
   CreateCurrencyInput,
   ListCurrencyInput,
   UpdateCurrencyInput,
 } from './dto/currencies.inputs';
-
 @Resolver(() => Currency)
 export class CurrenciesResolver {
   constructor(private currenciesService: CurrenciesService) {}

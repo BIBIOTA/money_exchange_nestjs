@@ -15,6 +15,12 @@ input CreatePersonInput {
   name: String!
 }
 
+input CreateRateInput {
+  currency_uuid: ID!
+  name: String!
+  rate: Float!
+}
+
 type Currency {
   currency_uuid: ID!
   name: String!
@@ -41,16 +47,26 @@ input ListPersonInput {
   name: String
 }
 
+input ListRateInput {
+  currency_uuid: ID!
+  name: String
+  rate: Float
+  rate_uuid: ID
+}
+
 type Mutation {
   createCurrency(payload: CreateCurrencyInput!): Currency!
   createHobby(payload: CreateHobbyInput!): Hobby!
   createPerson(payload: CreatePersonInput!): Person!
+  createRate(payload: CreateRateInput!): Rate!
   deleteCurrency(currency_uuid: ID!): Currency!
   deleteHobby(_id: String!): Hobby!
   deletePerson(_id: String!): Person!
+  deleteRate(rate_uuid: ID!): Rate!
   updateCurrency(payload: UpdateCurrencyInput!): Currency!
   updateHobby(payload: UpdateHobbyInput!): Hobby!
   updatePerson(payload: UpdatePersonInput!): Person!
+  updateRate(payload: UpdateRateInput!): Rate!
 }
 
 type Person {
@@ -66,6 +82,15 @@ type Query {
   hobby(_id: String!): Hobby!
   person(_id: String!): Person!
   persons(filters: ListPersonInput): [Person!]!
+  rate(rate_uuid: ID!): Rate!
+  rates(filters: ListRateInput): [Rate!]!
+}
+
+type Rate {
+  currency_uuid: ID!
+  name: String!
+  rate: Float!
+  rate_uuid: ID!
 }
 
 input UpdateCurrencyInput {
@@ -82,4 +107,11 @@ input UpdatePersonInput {
   _id: String!
   hobbies: [String!]
   name: String
+}
+
+input UpdateRateInput {
+  currency_uuid: ID!
+  name: String
+  rate: Float
+  rate_uuid: ID!
 }
