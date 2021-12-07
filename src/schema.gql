@@ -6,15 +6,6 @@ input CreateCurrencyInput {
   name: String!
 }
 
-input CreateHobbyInput {
-  name: String!
-}
-
-input CreatePersonInput {
-  hobbies: [String!]!
-  name: String!
-}
-
 input CreateRateInput {
   currency_uuid: ID!
   name: String!
@@ -26,24 +17,8 @@ type Currency {
   name: String!
 }
 
-type Hobby {
-  _id: String!
-  name: String!
-}
-
 input ListCurrencyInput {
   currency_uuid: ID
-  name: String
-}
-
-input ListHobbyInput {
-  _id: String
-  name: String
-}
-
-input ListPersonInput {
-  _id: String
-  hobbies: [String!]
   name: String
 }
 
@@ -56,32 +31,16 @@ input ListRateInput {
 
 type Mutation {
   createCurrency(payload: CreateCurrencyInput!): Currency!
-  createHobby(payload: CreateHobbyInput!): Hobby!
-  createPerson(payload: CreatePersonInput!): Person!
   createRate(payload: CreateRateInput!): Rate!
   deleteCurrency(currency_uuid: ID!): Currency!
-  deleteHobby(_id: String!): Hobby!
-  deletePerson(_id: String!): Person!
   deleteRate(rate_uuid: ID!): Rate!
   updateCurrency(payload: UpdateCurrencyInput!): Currency!
-  updateHobby(payload: UpdateHobbyInput!): Hobby!
-  updatePerson(payload: UpdatePersonInput!): Person!
   updateRate(payload: UpdateRateInput!): Rate!
-}
-
-type Person {
-  _id: String!
-  hobbies(populate: Boolean!): [Hobby!]!
-  name: String!
 }
 
 type Query {
   currencies(filters: ListCurrencyInput): [Currency!]!
   currency(currency_uuid: ID!): Currency!
-  hobbies(filters: ListHobbyInput): [Hobby!]!
-  hobby(_id: String!): Hobby!
-  person(_id: String!): Person!
-  persons(filters: ListPersonInput): [Person!]!
   rate(rate_uuid: ID!): Rate!
   rates(filters: ListRateInput): [Rate!]!
 }
@@ -95,17 +54,6 @@ type Rate {
 
 input UpdateCurrencyInput {
   currency_uuid: ID!
-  name: String
-}
-
-input UpdateHobbyInput {
-  _id: String!
-  name: String
-}
-
-input UpdatePersonInput {
-  _id: String!
-  hobbies: [String!]
   name: String
 }
 

@@ -5,8 +5,6 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { PersonModule } from './person/person.module';
-import { HobbyModule } from './hobby/hobby.module';
 import { join } from 'path';
 import { CurrenciesModule } from './currencies/currencies.module';
 import { RatesModule } from './rates/rates.module';
@@ -22,8 +20,6 @@ import { RatesModule } from './rates/rates.module';
       debug: false,
     }),
     MongooseModule.forRoot(process.env.mongoURI),
-    PersonModule,
-    HobbyModule,
     CurrenciesModule,
     RatesModule,
   ],
