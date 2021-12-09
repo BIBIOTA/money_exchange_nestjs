@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -21,8 +21,13 @@ export class RatesService {
 
   async getCurrencyIdAndProcessData(payload) {
     const { currency_uuid, ...othersPayload } = payload;
-    const { _id } = await this.currencyModel.findOne({ currency_uuid });
-    return { currency: _id, ...othersPayload };
+    const found = await this.currencyModel.findOne({ currency_uuid });
+
+    if (!found) {
+      throw new NotFoundException(`Currency with ${currency_uuid} not found`);
+    }
+
+    return { currency: found._id, ...othersPayload };
   }
 
   async create(payload: CreateRateInput) {
@@ -31,22 +36,44 @@ export class RatesService {
     return createdRate.save();
   }
 
-  getByUuId(rate_uuid: string) {
-    return this.rateModel.findOne({ rate_uuid }).exec();
+  async getByUuId(rate_uuid: string) {
+    const found = await this.rateModel.findOne({ rate_uuid }).exec();
+
+    if (!found) {
+      throw new NotFoundException(`Rate with ${rate_uuid} not found`);
+    }
+
+    return found;
   }
 
-  list(filters: ListRateInput) {
-    return this.rateModel.find({ ...filters }).exec();
+  async list(filters: ListRateInput) {
+    let data = {};
+    if (filters) {
+      data = await this.getCurrencyIdAndProcessData(filters);
+    }
+    return this.rateModel.find({ ...data }).exec();
   }
 
   async update(payload: UpdateRateInput) {
     const { rate_uuid, data } = await this.getCurrencyIdAndProcessData(payload);
-    return this.rateModel
+    const found = await this.rateModel
       .findOneAndUpdate({ rate_uuid }, data, { new: true })
       .exec();
+
+    if (!found) {
+      throw new NotFoundException(`Currency with ${rate_uuid} not found`);
+    }
+
+    return found;
   }
 
-  delete(rate_uuid: string) {
-    return this.rateModel.findOneAndDelete({ rate_uuid }).exec();
+  async delete(rate_uuid: string) {
+    const found = await this.rateModel.findOneAndDelete({ rate_uuid }).exec();
+
+    if (!found) {
+      throw new NotFoundException(`Rate with ${rate_uuid} not found`);
+    }
+
+    return found;
   }
 }

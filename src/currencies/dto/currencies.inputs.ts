@@ -1,9 +1,9 @@
 import { Field, InputType, ID } from '@nestjs/graphql';
-import { MinLength } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 @InputType()
 export class CreateCurrencyInput {
-  @MinLength(1)
   @Field(() => String)
+  @IsNotEmpty({ message: '請填寫匯率名稱' })
   name: string;
 }
 
@@ -18,7 +18,8 @@ export class ListCurrencyInput {
 @InputType()
 export class UpdateCurrencyInput {
   @Field(() => ID)
-  currency_uuid?: string;
+  @IsNotEmpty()
+  currency_uuid: string;
   @Field(() => String, { nullable: true })
   name?: string;
 }

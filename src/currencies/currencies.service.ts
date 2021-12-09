@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -21,29 +21,57 @@ export class CurrenciesService {
     return createdCurrency.save();
   }
 
-  getByUuId(currency_uuid: string) {
-    return this.currencyModel.findOne({ currency_uuid }).exec();
+  async getByUuId(currency_uuid: string) {
+    const found = await this.currencyModel.findOne({ currency_uuid }).exec();
+
+    if (!found) {
+      throw new NotFoundException(`Currency with ${currency_uuid} not found`);
+    }
+
+    return found;
   }
 
   list(filters: ListCurrencyInput) {
     return this.currencyModel.find({ ...filters }).exec();
   }
 
-  update(payload: UpdateCurrencyInput) {
+  async update(payload: UpdateCurrencyInput) {
     const { currency_uuid } = payload;
-    return this.currencyModel
+    const found = await this.currencyModel
       .findOneAndUpdate({ currency_uuid }, { ...payload }, { new: true })
       .exec();
+
+    if (!found) {
+      throw new NotFoundException(`Currency with ${currency_uuid} not found`);
+    }
+
+    return found;
   }
 
   async delete(currency_uuid: string) {
-    await this.deleteRelationRates(currency_uuid);
-    return this.currencyModel.findOneAndDelete({ currency_uuid }).exec();
+    const deleterates = await this.deleteRelationRates(currency_uuid);
+    if (deleterates) {
+      return this.currencyModel.findOneAndDelete({ currency_uuid }).exec();
+    }
+
+    throw new NotFoundException('delele currency process fail');
   }
 
-  async deleteRelationRates(currency_uuid: string) {
-    const { _id } = await this.currencyModel.findOne({ currency_uuid });
-    await this.rateModel.deleteMany({ currency_id: _id });
-    await this.currencyModel.findOne({ currency_uuid }).exec();
+  async deleteRelationRates(currency_uuid: string): Promise<boolean> {
+    const foundCurrency = await this.currencyModel.findOne({ currency_uuid });
+
+    if (!foundCurrency) {
+      throw new NotFoundException(`Currency with ${currency_uuid} not found`);
+    }
+
+    const foundRates = await this.rateModel.deleteMany({
+      currency_id: foundCurrency._id,
+    });
+
+    if (!foundRates) {
+      throw new NotFoundException('delele rates process fail');
+    }
+
+    return true;
   }
 }

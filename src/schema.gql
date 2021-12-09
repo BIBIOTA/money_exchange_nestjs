@@ -23,7 +23,7 @@ input ListCurrencyInput {
 }
 
 input ListRateInput {
-  currency_uuid: ID!
+  currency_uuid: ID
   name: String
   rate: Float
   rate_uuid: ID
