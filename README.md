@@ -71,3 +71,10 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+## About this side-project's command
+
+# seed currencies
+npx nestjs-command create:currencies name
+# seed rates
+npx nestjs-command create:rates name --rate int --currency_uuid string

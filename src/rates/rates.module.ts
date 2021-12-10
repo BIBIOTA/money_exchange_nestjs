@@ -5,6 +5,8 @@ import { Rate, RateSchema } from './rates.model';
 import { RatesService } from './rates.service';
 import { RatesResolver } from './rates.resolver';
 
+import { RateCommand } from './rates.command';
+
 import { Currency, CurrencySchema } from '../currencies/currencies.model';
 
 @Module({
@@ -14,6 +16,6 @@ import { Currency, CurrencySchema } from '../currencies/currencies.model';
       { name: Currency.name, schema: CurrencySchema },
     ]),
   ],
-  providers: [RatesService, RatesResolver],
+  providers: [RatesService, RatesResolver, RateCommand],
 })
 export class RatesModule {}

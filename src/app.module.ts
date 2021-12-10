@@ -6,11 +6,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { join } from 'path';
+import { CommandModule } from 'nestjs-command';
 import { CurrenciesModule } from './currencies/currencies.module';
 import { RatesModule } from './rates/rates.module';
 
 @Module({
   imports: [
+    CommandModule,
     ConfigModule.forRoot(),
     // TypeOrmModule.forRoot(),
     GraphQLModule.forRoot({

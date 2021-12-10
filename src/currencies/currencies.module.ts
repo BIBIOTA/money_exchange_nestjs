@@ -6,6 +6,8 @@ import { CurrenciesService } from './currencies.service';
 import { CurrenciesResolver } from './currencies.resolver';
 
 import { Rate, RateSchema } from '../rates/rates.model';
+
+import { CurrencyCommand } from './currencies.command';
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -13,6 +15,6 @@ import { Rate, RateSchema } from '../rates/rates.model';
       { name: Rate.name, schema: RateSchema },
     ]),
   ],
-  providers: [CurrenciesService, CurrenciesResolver],
+  providers: [CurrenciesService, CurrenciesResolver, CurrencyCommand],
 })
 export class CurrenciesModule {}
