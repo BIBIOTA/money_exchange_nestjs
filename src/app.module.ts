@@ -15,6 +15,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
   imports: [
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client/dist'),
+      serveRoot: '/api',
     }),
     CommandModule,
     ConfigModule.forRoot(),
