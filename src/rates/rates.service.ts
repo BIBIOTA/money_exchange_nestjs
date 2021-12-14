@@ -21,7 +21,7 @@ export class RatesService {
 
   async getCurrencyIdAndProcessData(payload) {
     const { currency_uuid, ...othersPayload } = payload;
-    const found = await this.currencyModel.findOne({ currency_uuid });
+    const found = await this.currencyModel.findOne({ currency_uuid }).exec();
 
     if (!found) {
       throw new NotFoundException(`Currency with ${currency_uuid} not found`);

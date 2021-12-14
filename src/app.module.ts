@@ -9,9 +9,14 @@ import { join } from 'path';
 import { CommandModule } from 'nestjs-command';
 import { CurrenciesModule } from './currencies/currencies.module';
 import { RatesModule } from './rates/rates.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'client/dist'),
+      serveRoot: '/api',
+    }),
     CommandModule,
     ConfigModule.forRoot(),
     // TypeOrmModule.forRoot(),
