@@ -1,10 +1,17 @@
 import { Command, Positional, Option } from 'nestjs-command';
 import { Injectable } from '@nestjs/common';
 import { RatesService } from './rates.service';
-
+import { CurrenciesService } from '../currencies/currencies.service';
+import * as csv from 'csvtojson/v2';
+import * as fs from 'fs';
+import { HttpService } from '@nestjs/axios';
 @Injectable()
 export class RateCommand {
-  constructor(private readonly ratesService: RatesService) {}
+  constructor(
+    private readonly ratesService: RatesService,
+    private readonly currenciesService: CurrenciesService,
+    private httpService: HttpService,
+  ) {}
 
   @Command({
     command: 'create:rates <name>',
@@ -36,5 +43,39 @@ export class RateCommand {
       rate,
     });
     console.log(result);
+  }
+
+  @Command({
+    command: 'create:twbankRates',
+    describe: 'create taiwanbank rates',
+  })
+  async createTwbankRates() {
+    const result = await this.httpService
+      .get('https://rate.bot.com.tw/xrt/flcsv/0/day')
+      .toPromise();
+
+    fs.writeFileSync('ExchangeRate.csv', result.data);
+
+    const csvFilePath = 'ExchangeRate.csv';
+    const jsonArray = await csv().fromFile(csvFilePath);
+    console.log(jsonArray);
+
+    const { currency_uuid } = await this.currenciesService.findByName('TWD');
+
+    try {
+      if (jsonArray && jsonArray.length > 0) {
+        for (const item of jsonArray) {
+          const { 幣別, 現金 } = item;
+          await this.ratesService.create({
+            currency_uuid,
+            name: 幣別,
+            rate: 現金,
+          });
+        }
+        console.log('create done');
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 }

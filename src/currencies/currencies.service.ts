@@ -21,6 +21,16 @@ export class CurrenciesService {
     return createdCurrency.save();
   }
 
+  async findByName(name: string) {
+    const found = await this.currencyModel.findOne({ name }).exec();
+
+    if (!found) {
+      throw new NotFoundException(`Currency with ${name} not found`);
+    }
+
+    return found;
+  }
+
   async getByUuId(currency_uuid: string) {
     const found = await this.currencyModel.findOne({ currency_uuid }).exec();
 
