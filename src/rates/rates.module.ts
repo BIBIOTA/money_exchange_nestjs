@@ -9,13 +9,18 @@ import { RateCommand } from './rates.command';
 
 import { Currency, CurrencySchema } from '../currencies/currencies.model';
 
+import { CurrenciesService } from '../currencies/currencies.service';
+
+import { HttpModule } from '@nestjs/axios';
+
 @Module({
   imports: [
+    HttpModule,
     MongooseModule.forFeature([
       { name: Rate.name, schema: RateSchema },
       { name: Currency.name, schema: CurrencySchema },
     ]),
   ],
-  providers: [RatesService, RatesResolver, RateCommand],
+  providers: [RatesService, CurrenciesService, RatesResolver, RateCommand],
 })
 export class RatesModule {}

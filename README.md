@@ -75,6 +75,8 @@ Nest is [MIT licensed](LICENSE).
 ## About this side-project's command
 
 # seed currencies
-npx nestjs-command create:currencies name
+npx nestjs-command create:currencies 'TWD'
 # seed rates
 npx nestjs-command create:rates name --rate int --currency_uuid string
+# seed taiwan bank TWD exchange rates
+npx nestjs-command create:twbankRates
