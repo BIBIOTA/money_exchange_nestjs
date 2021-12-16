@@ -38,7 +38,11 @@ export class CurrenciesService {
   async update(payload: UpdateCurrencyInput) {
     const { currency_uuid } = payload;
     const found = await this.currencyModel
-      .findOneAndUpdate({ currency_uuid }, { ...payload }, { new: true })
+      .findOneAndUpdate(
+        { currency_uuid },
+        { ...payload, updated_at: new Date().getTime() },
+        { new: true },
+      )
       .exec();
 
     if (!found) {

@@ -13,8 +13,10 @@ input CreateRateInput {
 }
 
 type Currency {
+  created_at: Float!
   currency_uuid: ID!
   name: String!
+  updated_at: Float!
 }
 
 input ListCurrencyInput {
@@ -46,10 +48,12 @@ type Query {
 }
 
 type Rate {
+  created_at: Float!
   currency: Currency!
   name: String!
   rate: Float!
   rate_uuid: ID!
+  updated_at: Float!
 }
 
 input UpdateCurrencyInput {

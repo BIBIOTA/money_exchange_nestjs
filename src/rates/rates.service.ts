@@ -57,7 +57,11 @@ export class RatesService {
   async update(payload: UpdateRateInput) {
     const { rate_uuid, data } = await this.getCurrencyIdAndProcessData(payload);
     const found = await this.rateModel
-      .findOneAndUpdate({ rate_uuid }, data, { new: true })
+      .findOneAndUpdate(
+        { rate_uuid },
+        { ...data, updated_at: new Date().getTime() },
+        { new: true },
+      )
       .exec();
 
     if (!found) {

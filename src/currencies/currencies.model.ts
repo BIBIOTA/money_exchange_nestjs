@@ -16,6 +16,14 @@ export class Currency {
     unique: true,
   })
   name: string;
+
+  @Field(() => Number)
+  @Prop({ type: Number, default: new Date().getTime() })
+  created_at: number;
+
+  @Field(() => Number)
+  @Prop({ type: Number, default: new Date().getTime() })
+  updated_at: number;
 }
 
 export type CurrencyDocument = Currency & Document;

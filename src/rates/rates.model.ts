@@ -24,6 +24,14 @@ export class Rate {
   @Field(() => Currency)
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: Currency.name })
   currency: MongooseSchema.Types.ObjectId;
+
+  @Field(() => Number)
+  @Prop({ type: Number, default: new Date().getTime() })
+  created_at: number;
+
+  @Field(() => Number)
+  @Prop({ type: Number, default: new Date().getTime() })
+  updated_at: number;
 }
 
 export type RateDocument = Rate & Document;
