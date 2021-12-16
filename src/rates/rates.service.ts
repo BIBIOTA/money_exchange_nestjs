@@ -31,6 +31,18 @@ export class RatesService {
     return { currency: found._id, ...othersPayload };
   }
 
+  async updateCurrencyTimestamp(id: string) {
+    const found = await this.currencyModel.findOne({ id }).exec();
+
+    if (!found) {
+      throw new NotFoundException(`Currency with ${id} not found`);
+    }
+
+    await this.currencyModel
+      .findOneAndUpdate({ _id: id }, { updated_at: new Date().getTime() })
+      .exec();
+  }
+
   async findHasUniqueRateData(
     currency: MongooseSchema.Types.ObjectId,
     name: string,
@@ -49,6 +61,7 @@ export class RatesService {
     const hasdata = await this.findHasUniqueRateData(data.currency, data.name);
     if (!hasdata) {
       const createdRate = new this.rateModel(data);
+      await this.updateCurrencyTimestamp(data.currency);
       return createdRate.save();
     } else {
       throw new NotFoundException(
@@ -90,8 +103,10 @@ export class RatesService {
         .exec();
 
       if (!found) {
-        throw new NotFoundException(`Currency with ${rate_uuid} not found`);
+        throw new NotFoundException(`rate with ${rate_uuid} not found`);
       }
+
+      await this.updateCurrencyTimestamp(data.currency);
 
       return found;
     } else {
