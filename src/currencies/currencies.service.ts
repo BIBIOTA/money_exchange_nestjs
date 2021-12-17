@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Schema as MongooseSchema } from 'mongoose';
 
 import { Currency, CurrencyDocument } from './currencies.model';
 import { Rate, RateDocument } from '../rates/rates.model';
@@ -16,16 +16,20 @@ export class CurrenciesService {
     @InjectModel(Rate.name) private rateModel: Model<RateDocument>,
   ) {}
 
-  create(payload: CreateCurrencyInput) {
-    const createdCurrency = new this.currencyModel(payload);
-    return createdCurrency.save();
+  async deleteMany() {
+    await this.currencyModel.deleteMany({});
   }
 
-  async findByName(name: string) {
-    const found = await this.currencyModel.findOne({ name }).exec();
+  create(payload: CreateCurrencyInput) {
+    const createCurrency = new this.currencyModel(payload);
+    return createCurrency.save();
+  }
+
+  async getByCode(code: string) {
+    const found = await this.currencyModel.findOne({ code }).exec();
 
     if (!found) {
-      throw new NotFoundException(`Currency with ${name} not found`);
+      throw new NotFoundException(`Currency with ${code} not found`);
     }
 
     return found;
@@ -41,8 +45,8 @@ export class CurrenciesService {
     return found;
   }
 
-  list(filters: ListCurrencyInput) {
-    return this.currencyModel.find({ ...filters }).exec();
+  async list(filters: ListCurrencyInput) {
+    return await this.currencyModel.find({ ...filters }).exec();
   }
 
   async update(payload: UpdateCurrencyInput) {

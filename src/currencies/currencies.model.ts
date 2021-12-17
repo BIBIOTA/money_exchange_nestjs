@@ -15,7 +15,15 @@ export class Currency {
   @Prop({
     unique: true,
   })
+  code: string;
+
+  @Field(() => String)
+  @Prop()
   name: string;
+
+  @Field(() => String)
+  @Prop()
+  cn_name: string;
 
   @Field(() => Number)
   @Prop({ type: Number, default: new Date().getTime() })

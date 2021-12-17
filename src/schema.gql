@@ -3,6 +3,8 @@
 # ------------------------------------------------------
 
 input CreateCurrencyInput {
+  cn_name: String!
+  code: String!
   name: String!
 }
 
@@ -13,6 +15,8 @@ input CreateRateInput {
 }
 
 type Currency {
+  cn_name: String!
+  code: String!
   created_at: Float!
   currency_uuid: ID!
   name: String!
@@ -32,6 +36,8 @@ type ExchangeOutput {
 }
 
 input ListCurrencyInput {
+  cn_name: String
+  code: String
   currency_uuid: ID
   name: String
 }
@@ -70,6 +76,8 @@ type Rate {
 }
 
 input UpdateCurrencyInput {
+  cn_name: String
+  code: String
   currency_uuid: ID!
   name: String
 }

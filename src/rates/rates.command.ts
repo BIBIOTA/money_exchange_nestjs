@@ -61,23 +61,25 @@ export class RateCommand {
     const jsonArray = await csv().fromFile(csvFilePath);
     console.log(jsonArray);
 
-    const { currency_uuid } = await this.currenciesService.findByName('TWD');
+    const currency = await this.currenciesService.getByCode('TWD');
 
     try {
       if (jsonArray && jsonArray.length > 0) {
-        for (const item of jsonArray) {
-          const { 幣別, 現金 } = item;
-          if (typeof +現金 === 'number' && +現金 !== 0) {
-            const divideRate = await math.divide(1, +現金);
-            await this.ratesService.create({
-              currency_uuid,
-              name: 幣別,
-              rate: +divideRate,
-            });
-          } else {
-            continue;
+        await this.ratesService.deleteMany().then(async () => {
+          for (const item of jsonArray) {
+            const { 幣別, 現金 } = item;
+            if (typeof +現金 === 'number' && +現金 !== 0) {
+              const divideRate = await math.divide(1, +現金);
+              await this.ratesService.create({
+                currency_uuid: currency.currency_uuid,
+                name: 幣別,
+                rate: +divideRate,
+              });
+            } else {
+              continue;
+            }
           }
-        }
+        });
         console.log('create done');
       }
     } catch (error) {

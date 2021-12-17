@@ -23,6 +23,10 @@ export class RatesService {
     @InjectModel(Currency.name) private currencyModel: Model<CurrencyDocument>,
   ) {}
 
+  async deleteMany() {
+    await this.rateModel.deleteMany({});
+  }
+
   async getCurrencyIdAndProcessData(payload) {
     const { currency_uuid, ...othersPayload } = payload;
     const found = await this.currencyModel.findOne({ currency_uuid }).exec();
@@ -48,18 +52,21 @@ export class RatesService {
 
   async exchange(exchangeInput: ExchangeInput): Promise<ExchangeOutput> {
     const { currency_uuid, rate_uuid, amount } = exchangeInput;
+
     const currency = await this.currencyModel.findOne({ currency_uuid }).exec();
     if (!currency) {
       throw new NotFoundException(`Currency with ${currency_uuid} not found`);
     }
+
     const rate = await this.getByUuId(rate_uuid);
     if (!rate) {
       throw new NotFoundException(`Rate with ${rate_uuid} not found`);
     }
+
     const result = await this.caculate(rate.rate, amount);
     return {
       result,
-      from: currency.name,
+      from: currency.cn_name,
       to: rate.name,
     };
   }
