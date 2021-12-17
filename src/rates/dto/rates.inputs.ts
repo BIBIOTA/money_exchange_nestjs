@@ -1,4 +1,4 @@
-import { Field, InputType, ID } from '@nestjs/graphql';
+import { Field, InputType, ObjectType, ID } from '@nestjs/graphql';
 import { IsNotEmpty } from 'class-validator';
 
 @InputType()
@@ -39,4 +39,17 @@ export class UpdateRateInput {
   rate?: number;
   @Field(() => ID)
   currency_uuid?: string;
+}
+
+@InputType('ExchangeInput')
+@ObjectType('Exchange')
+export class ExchangeInput {
+  @Field(() => ID)
+  @IsNotEmpty()
+  currency_uuid: string;
+  @Field(() => ID)
+  @IsNotEmpty()
+  rate_uuid: string;
+  @Field(() => Number)
+  amount: number;
 }

@@ -4,6 +4,7 @@ import { RatesService } from './rates.service';
 import { CurrenciesService } from '../currencies/currencies.service';
 import * as csv from 'csvtojson/v2';
 import * as fs from 'fs';
+import * as math from 'mathjs';
 import { HttpService } from '@nestjs/axios';
 @Injectable()
 export class RateCommand {
@@ -66,11 +67,16 @@ export class RateCommand {
       if (jsonArray && jsonArray.length > 0) {
         for (const item of jsonArray) {
           const { 幣別, 現金 } = item;
-          await this.ratesService.create({
-            currency_uuid,
-            name: 幣別,
-            rate: 現金,
-          });
+          if (typeof +現金 === 'number' && +現金 !== 0) {
+            const divideRate = await math.divide(1, +現金);
+            await this.ratesService.create({
+              currency_uuid,
+              name: 幣別,
+              rate: +divideRate,
+            });
+          } else {
+            continue;
+          }
         }
         console.log('create done');
       }

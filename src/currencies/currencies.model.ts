@@ -2,7 +2,7 @@ import { Document, Schema as MongooseSchema } from 'mongoose';
 import { Field, ObjectType, ID } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { v4 as uuid } from 'uuid';
-@ObjectType()
+@ObjectType('Currency')
 @Schema()
 export class Currency {
   _id: MongooseSchema.Types.ObjectId;

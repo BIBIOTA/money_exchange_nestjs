@@ -16,12 +16,21 @@ import {
   CreateRateInput,
   ListRateInput,
   UpdateRateInput,
+  ExchangeInput,
 } from './dto/rates.inputs';
+import { ExchangeOutput } from './dto/rates.output';
 import { Currency } from 'src/currencies/currencies.model';
 
 @Resolver(() => Rate)
 export class RatesResolver {
   constructor(private ratesService: RatesService) {}
+
+  @Query(() => ExchangeOutput)
+  async exchange(
+    @Args('exchangeInput') exchangeInput: ExchangeInput,
+  ): Promise<ExchangeOutput> {
+    return this.ratesService.exchange(exchangeInput);
+  }
 
   @Query(() => Rate)
   async rate(@Args('rate_uuid', { type: () => ID }) rate_uuid: string) {

@@ -4,7 +4,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { v4 as uuid } from 'uuid';
 
 import { Currency } from '../currencies/currencies.model';
-@ObjectType()
+@ObjectType('Rate')
 @Schema()
 export class Rate {
   _id: MongooseSchema.Types.ObjectId;

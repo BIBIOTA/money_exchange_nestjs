@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Schema as MongooseSchema } from 'mongoose';
 import { Model } from 'mongoose';
+import { chain } from 'mathjs';
 
 import { Rate, RateDocument } from './rates.model';
 
@@ -9,7 +10,9 @@ import {
   CreateRateInput,
   ListRateInput,
   UpdateRateInput,
+  ExchangeInput,
 } from './dto/rates.inputs';
+import { ExchangeOutput } from './dto/rates.output';
 
 import { Currency, CurrencyDocument } from '../currencies/currencies.model';
 
@@ -41,6 +44,29 @@ export class RatesService {
     await this.currencyModel
       .findOneAndUpdate({ _id: id }, { updated_at: new Date().getTime() })
       .exec();
+  }
+
+  async exchange(exchangeInput: ExchangeInput): Promise<ExchangeOutput> {
+    const { currency_uuid, rate_uuid, amount } = exchangeInput;
+    const currency = await this.currencyModel.findOne({ currency_uuid }).exec();
+    if (!currency) {
+      throw new NotFoundException(`Currency with ${currency_uuid} not found`);
+    }
+    const rate = await this.getByUuId(rate_uuid);
+    if (!rate) {
+      throw new NotFoundException(`Rate with ${rate_uuid} not found`);
+    }
+    const result = await this.caculate(rate.rate, amount);
+    return {
+      result,
+      from: currency.name,
+      to: rate.name,
+    };
+  }
+
+  async caculate(rate: number, amount: number): Promise<number> {
+    const caculateAmount = chain(amount).multiply(rate);
+    return +caculateAmount;
   }
 
   async findHasUniqueRateData(

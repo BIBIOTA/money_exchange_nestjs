@@ -19,6 +19,18 @@ type Currency {
   updated_at: Float!
 }
 
+input ExchangeInput {
+  amount: Float!
+  currency_uuid: ID!
+  rate_uuid: ID!
+}
+
+type ExchangeOutput {
+  from: String!
+  result: Float!
+  to: String!
+}
+
 input ListCurrencyInput {
   currency_uuid: ID
   name: String
@@ -43,6 +55,7 @@ type Mutation {
 type Query {
   currencies(filters: ListCurrencyInput): [Currency!]!
   currency(currency_uuid: ID!): Currency!
+  exchange(exchangeInput: ExchangeInput!): ExchangeOutput!
   rate(rate_uuid: ID!): Rate!
   rates(filters: ListRateInput): [Rate!]!
 }
