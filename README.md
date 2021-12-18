@@ -83,3 +83,5 @@ npx nestjs-command create:codes
 npx nestjs-command create:rates 'code' 'name' --rate int --currency_uuid string
 # seed taiwan bank TWD exchange rates
 npx nestjs-command create:twbankRates
+
+# currency toPrecision default value (3)

@@ -30,7 +30,7 @@ input ExchangeInput {
 
 type ExchangeOutput {
   from: String!
-  result: Float!
+  result: String!
   to: String!
 }
 

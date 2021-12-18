@@ -38,15 +38,18 @@ export class RatesService {
     return { currency: found._id, ...othersPayload };
   }
 
-  async updateCurrencyTimestamp(id: string) {
-    const found = await this.currencyModel.findOne({ id }).exec();
+  async updateCurrencyTimestamp(_id: string) {
+    const found = await this.currencyModel.findOne({ _id }).exec();
 
     if (!found) {
-      throw new NotFoundException(`Currency with ${id} not found`);
+      throw new NotFoundException(`Currency with ${_id} not found`);
     }
 
     await this.currencyModel
-      .findOneAndUpdate({ _id: id }, { updated_at: new Date().getTime() })
+      .findOneAndUpdate(
+        { _id: found._id },
+        { updated_at: new Date().getTime() },
+      )
       .exec();
   }
 
@@ -71,9 +74,13 @@ export class RatesService {
     };
   }
 
-  async caculate(rate: number, amount: number): Promise<number> {
-    const caculateAmount = chain(amount).multiply(rate);
-    return +caculateAmount;
+  async caculate(rate: number, amount: number): Promise<string> {
+    const caculateAmount = chain(amount).multiply(rate).done();
+    const caculateRound = caculateAmount.toPrecision(3);
+    const caculateToNumberFormat = new Intl.NumberFormat().format(
+      caculateRound,
+    );
+    return caculateToNumberFormat;
   }
 
   async findHasUniqueRateData(

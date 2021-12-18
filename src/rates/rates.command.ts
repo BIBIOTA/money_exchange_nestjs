@@ -77,12 +77,13 @@ export class RateCommand {
             const { 幣別, 現金 } = item;
             if (typeof +現金 === 'number' && +現金 !== 0) {
               const divideRate = await math.divide(1, +現金);
+              const divideRound = await divideRate.toPrecision(3);
               const { name } = await this.currenciesService.getByCode(幣別);
               await this.ratesService.create({
                 currency_uuid: currency.currency_uuid,
                 code: 幣別,
                 name,
-                rate: +divideRate,
+                rate: +divideRound,
               });
             } else {
               continue;
