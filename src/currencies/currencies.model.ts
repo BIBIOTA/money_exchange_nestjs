@@ -21,10 +21,6 @@ export class Currency {
   @Prop()
   name: string;
 
-  @Field(() => String)
-  @Prop()
-  cn_name: string;
-
   @Field(() => Number)
   @Prop({ type: Number, default: new Date().getTime() })
   created_at: number;

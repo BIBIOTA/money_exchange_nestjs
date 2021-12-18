@@ -4,6 +4,10 @@ import { IsNotEmpty } from 'class-validator';
 @InputType()
 export class CreateRateInput {
   @Field(() => String)
+  @IsNotEmpty({ message: '請填寫匯率代號' })
+  code: string;
+
+  @Field(() => String)
   @IsNotEmpty({ message: '請填寫匯率名稱' })
   name: string;
 
@@ -21,6 +25,8 @@ export class ListRateInput {
   @Field(() => ID, { nullable: true })
   rate_uuid?: string;
   @Field(() => String, { nullable: true })
+  code?: string;
+  @Field(() => String, { nullable: true })
   name?: string;
   @Field(() => Number, { nullable: true })
   rate?: number;
@@ -33,6 +39,8 @@ export class UpdateRateInput {
   @Field(() => ID)
   @IsNotEmpty()
   rate_uuid: string;
+  @Field(() => String, { nullable: true })
+  code?: string;
   @Field(() => String, { nullable: true })
   name?: string;
   @Field(() => Number, { nullable: true })

@@ -8,12 +8,8 @@ export class CreateCurrencyInput {
   code: string;
 
   @Field(() => String)
-  @IsNotEmpty({ message: '請填寫匯率英文名稱' })
+  @IsNotEmpty({ message: '請填寫匯率名稱' })
   name: string;
-
-  @Field(() => String)
-  @IsNotEmpty({ message: '請填寫匯率中文名稱' })
-  cn_name: string;
 }
 
 @InputType()
@@ -24,8 +20,6 @@ export class ListCurrencyInput {
   code?: string;
   @Field(() => String, { nullable: true })
   name?: string;
-  @Field(() => String, { nullable: true })
-  cn_name?: string;
 }
 
 @InputType()
@@ -37,6 +31,4 @@ export class UpdateCurrencyInput {
   code?: string;
   @Field(() => String, { nullable: true })
   name?: string;
-  @Field(() => String, { nullable: true })
-  cn_name?: string;
 }

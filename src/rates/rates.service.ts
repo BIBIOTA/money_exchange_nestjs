@@ -66,7 +66,7 @@ export class RatesService {
     const result = await this.caculate(rate.rate, amount);
     return {
       result,
-      from: currency.cn_name,
+      from: currency.name,
       to: rate.name,
     };
   }

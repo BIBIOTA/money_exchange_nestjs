@@ -24,17 +24,10 @@ export class CurrencyCommand {
       type: 'string',
     })
     name: string,
-    @Positional({
-      name: 'cn_name',
-      describe: 'the cn_name',
-      type: 'string',
-    })
-    cn_name: string,
   ) {
     const currency = await this.currenciesService.create({
       code,
       name,
-      cn_name,
     });
     console.log(currency);
   }
@@ -52,11 +45,10 @@ export class CurrencyCommand {
       if (jsonArray && jsonArray.length > 0) {
         await this.currenciesService.deleteMany().then(async () => {
           for (const item of jsonArray) {
-            const { code, name, cn_name } = item;
+            const { code, name } = item;
             await this.currenciesService.create({
               code,
               name,
-              cn_name,
             });
           }
         });

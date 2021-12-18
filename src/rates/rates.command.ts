@@ -15,10 +15,16 @@ export class RateCommand {
   ) {}
 
   @Command({
-    command: 'create:rates <name>',
+    command: 'create:rates <code> <name> <rate> <currency_uuid>',
     describe: 'create a rate',
   })
   async create(
+    @Positional({
+      name: 'code',
+      describe: 'the code',
+      type: 'string',
+    })
+    code: string,
     @Positional({
       name: 'name',
       describe: 'the name',
@@ -40,6 +46,7 @@ export class RateCommand {
   ) {
     const result = await this.ratesService.create({
       currency_uuid,
+      code,
       name,
       rate,
     });
@@ -70,9 +77,11 @@ export class RateCommand {
             const { 幣別, 現金 } = item;
             if (typeof +現金 === 'number' && +現金 !== 0) {
               const divideRate = await math.divide(1, +現金);
+              const { name } = await this.currenciesService.getByCode(幣別);
               await this.ratesService.create({
                 currency_uuid: currency.currency_uuid,
-                name: 幣別,
+                code: 幣別,
+                name,
                 rate: +divideRate,
               });
             } else {

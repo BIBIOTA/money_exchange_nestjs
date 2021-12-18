@@ -14,6 +14,12 @@ export class Rate {
   rate_uuid: string;
 
   @Field(() => String)
+  @Prop({
+    unique: true,
+  })
+  code: string;
+
+  @Field(() => String)
   @Prop()
   name: string;
 
