@@ -96,6 +96,15 @@ export class RatesService {
     return true;
   }
 
+  async createOrUpdate(payload: CreateRateInput) {
+    const data = await this.getCurrencyIdAndProcessData(payload);
+    await this.rateModel.findOneAndUpdate(
+      { code: data.code },
+      { ...data, updated_at: new Date().getTime() },
+      { upsert: true, new: true, setDefaultsOnInsert: true },
+    );
+  }
+
   async create(payload: CreateRateInput) {
     const data = await this.getCurrencyIdAndProcessData(payload);
     const hasdata = await this.findHasUniqueRateData(data.currency, data.name);
