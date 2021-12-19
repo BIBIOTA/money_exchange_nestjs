@@ -54,7 +54,7 @@ export class RateCommand {
     console.log(result);
   }
 
-  @Cron('* * 1 * * *')
+  @Cron('0 5 * * * *')
   @Command({
     command: 'create:twbankRates <option>',
     describe: 'create taiwanbank rates',
@@ -98,6 +98,7 @@ export class RateCommand {
               name,
               rate: +divideRound,
             });
+            await this.ratesService.updateCurrencyTimestamp(currency._id);
           } else {
             continue;
           }
