@@ -1,5 +1,6 @@
 import { Command, Positional, Option } from 'nestjs-command';
 import { Injectable } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
 import { RatesService } from './rates.service';
 import { CurrenciesService } from '../currencies/currencies.service';
 import * as csv from 'csvtojson/v2';
@@ -53,6 +54,7 @@ export class RateCommand {
     console.log(result);
   }
 
+  @Cron('* * 1 * * *')
   @Command({
     command: 'create:twbankRates <option>',
     describe: 'create taiwanbank rates',

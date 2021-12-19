@@ -10,9 +10,11 @@ import { CommandModule } from 'nestjs-command';
 import { CurrenciesModule } from './currencies/currencies.module';
 import { RatesModule } from './rates/rates.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client/dist'),
     }),
