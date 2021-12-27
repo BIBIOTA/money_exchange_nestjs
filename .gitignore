@@ -39,3 +39,7 @@ lerna-debug.log*
 client/*
 
 python/*
+
+ExchangeRate.csv
+
+currency_exchanger.pem
