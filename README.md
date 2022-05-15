@@ -6,15 +6,15 @@
 
 ### Tech:
 
-Frontend: Vue.js(Vue 3)、Tailwind
+- Frontend: Vue.js(Vue 3)、Tailwind
 
-Backend: NestJs(TypeScript)
+- Backend: NestJs(TypeScript)
 
-Database: MongoDB
+- Database: MongoDB
 
-API: GraphQL
+- API: GraphQL
 
-Environment: AWS(EC2)
+- Environment: AWS(EC2)
 
 ### More info:
 
@@ -62,15 +62,15 @@ $ npm run test:cov
 
 ## About this side-project's command
 
-# seed currencies
+### seed currencies
 - npx nestjs-command create:currencies 'TWD' 'New Taiwan dollar' '新台幣元'
 
-# seed currencies from csv
+### seed currencies from csv
 - npx nestjs-command create:codes
-# seed rates
+### seed rates
 - npx nestjs-command create:rates 'code' 'name' --rate int --currency_uuid string
-# seed taiwan bank TWD exchange rates
+### seed taiwan bank TWD exchange rates
 - npx nestjs-command create:twbankRates trancate
 - npx nestjs-command create:twbankRates update
 
-# currency toPrecision default value (3)
+### currency toPrecision default value (3)
